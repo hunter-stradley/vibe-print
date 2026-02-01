@@ -33,7 +33,7 @@ class ProfileManager:
     Handles loading, saving, and organizing profile files.
     """
 
-    DEFAULT_PROFILES_DIR = Path.home() / ".bambustudio-mcp" / "profiles"
+    DEFAULT_PROFILES_DIR = Path.home() / ".vibe-print" / "profiles"
 
     def __init__(self, profiles_dir: Optional[Path] = None):
         """

@@ -100,7 +100,7 @@ class AIModelGenerator:
         self.meshy_key = meshy_api_key or os.getenv("MESHY_API_KEY", "")
         self.tripo3d_key = tripo3d_api_key or os.getenv("TRIPO3D_API_KEY", "")
 
-        self.output_dir = output_dir or Path.home() / ".bambustudio-mcp" / "ai_generated"
+        self.output_dir = output_dir or Path.home() / ".vibe-print" / "ai_generated"
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         self._active_jobs: Dict[str, AIGenerationStatus] = {}

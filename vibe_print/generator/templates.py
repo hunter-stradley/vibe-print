@@ -410,7 +410,7 @@ class TemplateLibrary:
             return None
 
         if output_dir is None:
-            output_dir = Path(tempfile.gettempdir()) / "bambustudio-mcp" / "generated"
+            output_dir = Path(tempfile.gettempdir()) / "vibe-print" / "generated"
         output_dir.mkdir(parents=True, exist_ok=True)
 
         # Generate filename from parameters

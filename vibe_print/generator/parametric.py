@@ -70,7 +70,7 @@ class ParametricGenerator:
         Args:
             output_dir: Directory for generated models
         """
-        self.output_dir = output_dir or Path(tempfile.gettempdir()) / "bambustudio-mcp" / "generated"
+        self.output_dir = output_dir or Path(tempfile.gettempdir()) / "vibe-print" / "generated"
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
     def is_available(self) -> tuple[bool, str]:

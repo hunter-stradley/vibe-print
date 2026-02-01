@@ -81,7 +81,7 @@ class ModelScaler:
         Args:
             output_dir: Directory for scaled output files. Uses temp dir if None.
         """
-        self.output_dir = output_dir or Path(tempfile.gettempdir()) / "bambustudio-mcp" / "scaled"
+        self.output_dir = output_dir or Path(tempfile.gettempdir()) / "vibe-print" / "scaled"
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self._check_dependencies()
 
