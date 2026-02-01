@@ -4,15 +4,11 @@ Example Workflow: Scaling a Tube Squeezer for a Lotion Bottle
 
 This script demonstrates the complete workflow for:
 1. Analyzing the original toothpaste squeezer model
-2. Scaling it to fit a larger lotion bottle (like the Gold Bond 5.5oz shown in the example)
+2. Scaling it to fit a larger lotion bottle
 3. Adjusting slicing parameters for the larger print
-4. Slicing with BambuStudio
+4. Slicing with slicer CLI
 5. Monitoring the print
 6. Tracking iterations for continuous improvement
-
-Based on the image showing:
-- Original squeezer: ~38mm wide (for toothpaste tubes ~25mm diameter)
-- Target: Gold Bond lotion bottle (~65mm diameter)
 """
 
 import asyncio
@@ -34,7 +30,6 @@ async def main():
     ORIGINAL_TUBE_DIAMETER = 25.0  # Standard toothpaste tube
 
     # Target bottle diameter (mm)
-    # Gold Bond 5.5oz lotion bottle is approximately 65mm diameter
     TARGET_BOTTLE_DIAMETER = 65.0
 
     # =========================================================================
@@ -44,7 +39,7 @@ async def main():
     print("STEP 1: Analyzing original model")
     print("=" * 60)
 
-    from bambustudio_mcp.models import ModelAnalyzer
+    from vibe_print.models import ModelAnalyzer
 
     analyzer = ModelAnalyzer()
 
@@ -70,7 +65,7 @@ Recommendations:
     print("STEP 2: Scaling model for lotion bottle")
     print("=" * 60)
 
-    from bambustudio_mcp.models import ModelScaler
+    from vibe_print.models import ModelScaler
 
     scaler = ModelScaler()
 
@@ -107,7 +102,7 @@ Structural Recommendations:
     print("STEP 3: Configuring slicing parameters")
     print("=" * 60)
 
-    from bambustudio_mcp.slicer.parameters import (
+    from vibe_print.slicer.parameters import (
         SlicingParameters,
         PRESET_TUBE_SQUEEZER_STRONG,
         adjust_for_scale,
@@ -141,38 +136,29 @@ Speed:
 """)
 
     # =========================================================================
-    # Step 4: Slice with BambuStudio
+    # Step 4: Slice with Slicer CLI
     # =========================================================================
     print("\n" + "=" * 60)
-    print("STEP 4: Slicing with BambuStudio CLI")
+    print("STEP 4: Slicing with slicer CLI")
     print("=" * 60)
 
-    from bambustudio_mcp.slicer.cli import BambuStudioCLI
+    from vibe_print.slicer.cli import SlicerCLI
 
-    cli = BambuStudioCLI()
+    cli = SlicerCLI()
     available, message = cli.is_available()
 
     if available:
-        print(f"BambuStudio CLI: {message}")
+        print(f"Slicer CLI: {message}")
         print("""
-Slicing command would be:
-/Applications/BambuStudio.app/Contents/MacOS/BambuStudio \\
-    --orient \\
-    --arrange 1 \\
-    --curr-bed-type="Cool Plate" \\
-    --slice 0 \\
-    --export-3mf /path/to/output.3mf \\
-    /path/to/scaled_model.stl
-
-Expected output:
+Slicing would produce:
 - Output: lotion_squeezer_65mm.3mf
 - Estimated time: ~2h 45m
 - Estimated filament: ~85g
 - Layers: 175
 """)
     else:
-        print(f"BambuStudio not available: {message}")
-        print("Install BambuStudio from: https://bambulab.com/en/download/studio")
+        print(f"Slicer not available: {message}")
+        print("Configure VIBE_SLICER_PATH environment variable")
 
     # =========================================================================
     # Step 5: Create Iteration Record
@@ -181,7 +167,7 @@ Expected output:
     print("STEP 5: Creating iteration record for tracking")
     print("=" * 60)
 
-    from bambustudio_mcp.iteration.tracker import IterationTracker
+    from vibe_print.iteration.tracker import IterationTracker
 
     tracker = IterationTracker()
     await tracker.initialize()
@@ -220,7 +206,7 @@ During printing, the MCP can:
    - Time remaining estimates
 
 2. Capture camera frames:
-   - RTSPS stream at 1 FPS
+   - RTSPS stream capture
    - Save snapshots for analysis
 
 3. Analyze print quality:
@@ -270,7 +256,7 @@ Improvement Suggestions:
     print("STEP 8: Recommendations for next iteration")
     print("=" * 60)
 
-    from bambustudio_mcp.iteration.recommender import ParameterRecommender
+    from vibe_print.iteration.recommender import ParameterRecommender
 
     recommender = ParameterRecommender()
     recommendations = recommender.get_recommendations(
@@ -286,14 +272,14 @@ Improvement Suggestions:
     print("=" * 60)
     print("""
 Summary:
-1. ✅ Analyzed original toothpaste squeezer model
-2. ✅ Scaled from 25mm to 65mm tube diameter (2.6x)
-3. ✅ Configured heavy-duty slicing parameters
-4. ✅ Ready for BambuStudio slicing
-5. ✅ Created iteration tracking record
-6. ✅ Print monitoring available via camera/MQTT
-7. ✅ Recorded outcome with quality assessment
-8. ✅ Generated recommendations for next print
+1. Analyzed original toothpaste squeezer model
+2. Scaled from 25mm to 65mm tube diameter (2.6x)
+3. Configured heavy-duty slicing parameters
+4. Ready for slicing
+5. Created iteration tracking record
+6. Print monitoring available via camera/MQTT
+7. Recorded outcome with quality assessment
+8. Generated recommendations for next print
 
 The scaled lotion bottle squeezer is ready for printing!
 """)

@@ -5,14 +5,14 @@ Quick reference for all model generation MCP tools.
 ## Overview
 
 The generation tools allow Claude to create 3D models from:
-1. **Natural language descriptions** → Parametric generation (CadQuery/OpenSCAD)
-2. **Reference images** → Dimension extraction + parametric generation
-3. **Text prompts** → AI generation (Meshy, Tripo3D)
-4. **Templates** → Pre-built customizable designs
+1. **Natural language descriptions** -> Parametric generation (CadQuery/OpenSCAD)
+2. **Reference images** -> Dimension extraction + parametric generation
+3. **Text prompts** -> AI generation (Meshy, Tripo3D)
+4. **Templates** -> Pre-built customizable designs
 
 ## Tools
 
-### `bambustudio_parse_requirements`
+### `vibe_parse_requirements`
 Parse natural language into structured model parameters.
 
 ```json
@@ -31,7 +31,7 @@ Parse natural language into structured model parameters.
 
 ---
 
-### `bambustudio_analyze_reference_image`
+### `vibe_analyze_reference_image`
 Extract dimensions from a photo.
 
 ```json
@@ -49,7 +49,7 @@ Extract dimensions from a photo.
 
 ---
 
-### `bambustudio_list_templates`
+### `vibe_list_templates`
 List available model templates.
 
 **Built-in templates:**
@@ -62,7 +62,7 @@ List available model templates.
 
 ---
 
-### `bambustudio_generate_from_template`
+### `vibe_generate_from_template`
 Generate a model from a customizable template.
 
 ```json
@@ -78,7 +78,7 @@ Generate a model from a customizable template.
 
 ---
 
-### `bambustudio_generate_parametric`
+### `vibe_generate_parametric`
 Generate from natural language using parametric CAD.
 
 ```json
@@ -98,7 +98,7 @@ Generate from natural language using parametric CAD.
 
 ---
 
-### `bambustudio_ai_generate`
+### `vibe_ai_generate`
 Generate using AI text-to-3D services.
 
 ```json
@@ -116,7 +116,7 @@ Generate using AI text-to-3D services.
 
 ---
 
-### `bambustudio_ai_status`
+### `vibe_ai_status`
 Check AI generation job status.
 
 ```json
@@ -133,11 +133,11 @@ Check AI generation job status.
 
 | Use Case | Recommended Tool |
 |----------|------------------|
-| Tube squeezer with specific dimensions | `generate_from_template` |
-| Functional part from description | `generate_parametric` |
-| "Make me a phone stand" | `parse_requirements` → `generate_from_template` |
-| Artistic figurine | `ai_generate` |
-| Dimension from photo | `analyze_reference_image` → `generate_from_template` |
+| Tube squeezer with specific dimensions | `vibe_generate_from_template` |
+| Functional part from description | `vibe_generate_parametric` |
+| "Make me a phone stand" | `vibe_parse_requirements` -> `vibe_generate_from_template` |
+| Artistic figurine | `vibe_ai_generate` |
+| Dimension from photo | `vibe_analyze_reference_image` -> `vibe_generate_from_template` |
 
 ---
 
@@ -145,13 +145,13 @@ Check AI generation job status.
 
 ```python
 # 1. Parse the request
-requirements = await bambustudio_parse_requirements({
-    "description": "Heavy duty squeezer for Gold Bond lotion, 65mm bottle",
+requirements = await vibe_parse_requirements({
+    "description": "Heavy duty squeezer for lotion, 65mm bottle",
     "target_dimension_mm": 65
 })
 
 # 2. Generate from template (recommended for precise functional parts)
-model = await bambustudio_generate_from_template({
+model = await vibe_generate_from_template({
     "template_name": "tube_squeezer",
     "tube_diameter": 65,
     "wall_thickness": 3.0,  # Heavy duty
@@ -159,7 +159,7 @@ model = await bambustudio_generate_from_template({
 })
 
 # 3. Slice
-sliced = await bambustudio_slice_model({
+sliced = await vibe_slice_model({
     "file_path": model["output_path"],
     "preset": "tube_squeezer_strong"
 })
@@ -186,7 +186,7 @@ For AI generation, use 1Password CLI to securely inject your API keys:
 
 ```bash
 # Store your API key in 1Password, then run with:
-op run --env-file=.env.template -- python -m bambustudio_mcp
+op run --env-file=.env.template -- python -m vibe_print
 
 # Or for one-off commands:
 MESHY_API_KEY=$(op read "op://Personal/Meshy/api_key") python your_script.py

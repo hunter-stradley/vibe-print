@@ -11,7 +11,7 @@ This script demonstrates the full end-to-end workflow:
 6. Print and monitor
 7. Detect defects and iterate
 
-Example use case: Creating a tube squeezer for a Gold Bond lotion bottle
+Example use case: Creating a tube squeezer for a lotion bottle
 based on the reference image showing the bottle dimensions.
 """
 
@@ -33,14 +33,14 @@ async def complete_workflow():
 
     # User's natural language request
     user_request = """
-    I need a tube squeezer for my Gold Bond lotion bottle.
+    I need a tube squeezer for my lotion bottle.
     The bottle is about 65mm diameter. I want it to be heavy duty
     since lotion is thicker than toothpaste and needs more force.
     """
 
     print(f"\nUser Request:\n{user_request.strip()}")
 
-    from bambustudio_mcp.generator.requirements import RequirementsParser
+    from vibe_print.generator.requirements import RequirementsParser
 
     parser = RequirementsParser()
     requirements = parser.parse(user_request)
@@ -85,7 +85,7 @@ Example analysis from the provided image:
     print("PHASE 3: GENERATING 3D MODEL")
     print("=" * 70)
 
-    from bambustudio_mcp.generator.templates import TubeSqueezerTemplate
+    from vibe_print.generator.templates import TubeSqueezerTemplate
 
     template = TubeSqueezerTemplate()
 
@@ -97,7 +97,7 @@ Example analysis from the provided image:
 
     # Generate with custom parameters
     custom_params = {
-        "tube_diameter": 65.0,       # For Gold Bond lotion bottle
+        "tube_diameter": 65.0,       # For lotion bottle
         "clearance": 1.5,            # Extra clearance for thick lotion residue
         "wall_thickness": 3.0,       # Heavy duty
         "handle_width": 18.0,        # Wider handles for better grip
@@ -120,7 +120,7 @@ Generated Model Dimensions:
 - Body depth: 48.75mm (75% of tube diameter)
 - Body height: 71.5mm
 - Method: CadQuery parametric generation
-- Output: /tmp/bambustudio-mcp/generated/lotion_squeezer_65mm.stl
+- Output: /tmp/vibe-print/generated/lotion_squeezer_65mm.stl
 """)
 
     # =========================================================================
@@ -130,7 +130,7 @@ Generated Model Dimensions:
     print("PHASE 4: OPTIMIZING SLICING PARAMETERS")
     print("=" * 70)
 
-    from bambustudio_mcp.slicer.parameters import (
+    from vibe_print.slicer.parameters import (
         SlicingParameters,
         PRESET_TUBE_SQUEEZER_STRONG,
         adjust_for_scale,
@@ -167,13 +167,13 @@ Adhesion:
     print("PHASE 5: TRACKING ITERATION")
     print("=" * 70)
 
-    from bambustudio_mcp.iteration.tracker import IterationTracker
+    from vibe_print.iteration.tracker import IterationTracker
 
     tracker = IterationTracker()
     await tracker.initialize()
 
     iteration = await tracker.create_iteration(
-        model_name="gold_bond_lotion_squeezer",
+        model_name="lotion_squeezer",
         model_path="/tmp/lotion_squeezer_65mm.stl",
         scale_factor=scale_factor,
         preset_name="tube_squeezer_strong_adjusted",
@@ -200,8 +200,8 @@ This will track the print outcome and enable learning for future prints.
 During printing, the MCP continuously:
 
 1. Monitors printer status via MQTT:
-   - Nozzle temp: 220°C / 220°C ✓
-   - Bed temp: 60°C / 60°C ✓
+   - Nozzle temp: 220C / 220C
+   - Bed temp: 60C / 60C
    - Progress: 45% (layer 78/175)
    - Time remaining: ~1h 30m
 
@@ -211,10 +211,10 @@ During printing, the MCP continuously:
    - Quality score: 95/100
 
 3. Watches for issues:
-   ✓ No layer shifts
-   ✓ No stringing
-   ✓ No warping
-   ✓ Good bed adhesion
+   - No layer shifts
+   - No stringing
+   - No warping
+   - Good bed adhesion
 """)
 
     # =========================================================================
@@ -246,7 +246,7 @@ Improvement Suggestions for Next Print:
         print(f"  {i}. {suggestion}")
 
     # Get parameter recommendations
-    from bambustudio_mcp.iteration.recommender import ParameterRecommender
+    from vibe_print.iteration.recommender import ParameterRecommender
 
     recommender = ParameterRecommender()
     recommendations = recommender.get_recommendations(
@@ -257,7 +257,7 @@ Improvement Suggestions for Next Print:
 
     print("\nParameter Adjustments for Next Iteration:")
     for rec in recommendations[:3]:
-        print(f"  - {rec.parameter}: {rec.current_value} → {rec.suggested_value}")
+        print(f"  - {rec.parameter}: {rec.current_value} -> {rec.suggested_value}")
         print(f"    Reason: {rec.reason}")
 
     # =========================================================================
@@ -270,18 +270,18 @@ Improvement Suggestions for Next Print:
     print("""
 Summary of what was accomplished:
 
-1. ✅ Parsed "I need a tube squeezer for my lotion bottle" into structured requirements
-2. ✅ Determined tube_squeezer category, 65mm diameter, heavy-duty needs
-3. ✅ Generated parametric 3D model using CadQuery
-4. ✅ Optimized slicing parameters for 2.6x scaled print
-5. ✅ Created iteration record for tracking
-6. ✅ (Simulated) Monitored print with camera-based quality analysis
-7. ✅ Recorded outcome with 88% quality score
-8. ✅ Generated recommendations for next iteration
+1. Parsed "I need a tube squeezer for my lotion bottle" into structured requirements
+2. Determined tube_squeezer category, 65mm diameter, heavy-duty needs
+3. Generated parametric 3D model using CadQuery
+4. Optimized slicing parameters for 2.6x scaled print
+5. Created iteration record for tracking
+6. (Simulated) Monitored print with camera-based quality analysis
+7. Recorded outcome with 88% quality score
+8. Generated recommendations for next iteration
 
 The lotion bottle squeezer is ready! For the next print:
 - Increase retraction by 0.5mm to reduce stringing
-- Lower nozzle temp by 5°C
+- Lower nozzle temp by 5C
 """)
 
 

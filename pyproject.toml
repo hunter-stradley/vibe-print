@@ -3,16 +3,16 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bambustudio-mcp"
+name = "vibe-print"
 version = "0.1.0"
-description = "MCP server for BambuStudio and Bambu Lab printer automation"
+description = "MCP server for end-to-end 3D printing automation with FDM printers"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "Hanna", email = "hunter.stradley@gmail.com"}
 ]
-keywords = ["mcp", "bambu", "3d-printing", "automation", "claude"]
+keywords = ["mcp", "3d-printing", "automation", "claude", "fdm"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -60,11 +60,11 @@ all = [
 ]
 
 [project.scripts]
-bambustudio-mcp = "bambustudio_mcp:main"
+vibe-print = "vibe_print:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["bambustudio_mcp*"]
+include = ["vibe_print*"]
 
 [tool.black]
 line-length = 100
