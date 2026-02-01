@@ -182,9 +182,14 @@ Or use OpenSCAD as fallback:
 brew install openscad  # macOS
 ```
 
-For AI generation, set environment variable:
+For AI generation, use 1Password CLI to securely inject your API keys:
+
 ```bash
-export MESHY_API_KEY="your_key"
-# or
-export TRIPO3D_API_KEY="your_key"
+# Store your API key in 1Password, then run with:
+op run --env-file=.env.template -- python -m bambustudio_mcp
+
+# Or for one-off commands:
+MESHY_API_KEY=$(op read "op://Personal/Meshy/api_key") python your_script.py
 ```
+
+See the main README for full 1Password CLI setup instructions.

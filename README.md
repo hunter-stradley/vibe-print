@@ -101,21 +101,47 @@ pip install -e ".[all]" --break-system-packages
 
 ## Configuration
 
-Create `.env` file or set environment variables:
+This project uses [1Password CLI](https://developer.1password.com/docs/cli/) for secure secret management. Never store API keys or credentials in plain text files.
+
+### Setting Up 1Password CLI
+
+1. Install 1Password CLI:
+   ```bash
+   brew install --cask 1password-cli
+   ```
+
+2. Sign in and enable shell integration:
+   ```bash
+   op signin
+   ```
+
+3. Store your secrets in 1Password. Create items with these fields:
+   - **Bambu Printer**: `ip_address`, `access_code`, `serial_number`
+   - **Meshy** (optional): `api_key`
+   - **Tripo3D** (optional): `api_key`
+
+### Running with 1Password CLI
+
+Use `op run` to inject secrets as environment variables:
+
+```bash
+op run --env-file=.env.template -- python -m bambustudio_mcp
+```
+
+Create a `.env.template` file (safe to commit - contains only references, not secrets):
 
 ```bash
 # Printer connection (required)
-BAMBU_PRINTER_IP=192.168.1.xxx
-BAMBU_ACCESS_CODE=your_access_code
-BAMBU_SERIAL=your_printer_serial
+BAMBU_PRINTER_IP=op://Personal/Bambu Printer/ip_address
+BAMBU_ACCESS_CODE=op://Personal/Bambu Printer/access_code
+BAMBU_SERIAL=op://Personal/Bambu Printer/serial_number
 
 # BambuStudio path (usually auto-detected)
 BAMBUSTUDIO_PATH=/Applications/BambuStudio.app/Contents/MacOS/BambuStudio
 
 # Optional: AI 3D generation
-MESHY_API_KEY=your_meshy_key
-# or
-TRIPO3D_API_KEY=your_tripo3d_key
+MESHY_API_KEY=op://Personal/Meshy/api_key
+TRIPO3D_API_KEY=op://Personal/Tripo3D/api_key
 ```
 
 ## Claude Desktop Configuration
@@ -126,17 +152,21 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "bambustudio": {
-      "command": "python",
-      "args": ["-m", "bambustudio_mcp"],
-      "env": {
-        "BAMBU_PRINTER_IP": "192.168.1.xxx",
-        "BAMBU_ACCESS_CODE": "your_code",
-        "BAMBU_SERIAL": "your_serial"
-      }
+      "command": "op",
+      "args": [
+        "run",
+        "--env-file=/path/to/bambustudio-mcp/.env.template",
+        "--",
+        "python",
+        "-m",
+        "bambustudio_mcp"
+      ]
     }
   }
 }
 ```
+
+This ensures secrets are never stored in plain text and are securely injected at runtime.
 
 ## Available Tools (33 total)
 
